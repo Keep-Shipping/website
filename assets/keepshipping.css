@@ -1,0 +1,52 @@
+/* Keep Shipping. Layout and colour are inline in index.html, as in the Claude
+   Design source; this file holds the base, the interaction states the inline
+   styles can't express, and the pieces added in the port. Hover and focus
+   rules need !important because they override inline styles. */
+
+html,body{margin:0;background:oklch(0.955 0.004 255);color:oklch(0.2 0.02 262);-webkit-font-smoothing:antialiased}
+*{box-sizing:border-box}
+a{color:oklch(0.48 0.2 263);text-underline-offset:3px}
+a:hover{color:oklch(0.2 0.02 262)}
+::selection{background:oklch(0.48 0.2 263);color:#fff}
+html{scroll-padding-top:16px}
+
+.page{font-family:'Bricolage Grotesque',system-ui,sans-serif;font-size:17px;line-height:1.55;min-height:100vh}
+
+.skip{position:absolute;left:-9999px;top:8px;padding:8px 12px;background:oklch(0.2 0.02 262);color:#fff;z-index:10}
+.skip:focus{left:8px}
+
+.nav-link{color:oklch(0.2 0.02 262);text-decoration:none}
+.nav-link:hover{text-decoration:underline}
+.nav-cta{color:#fff;background:oklch(0.2 0.02 262);padding:9px 14px;text-decoration:none}
+.nav-cta:hover{background:oklch(0.48 0.2 263);color:#fff}
+
+.in:focus{outline:3px solid oklch(0.48 0.2 263)!important;outline-offset:2px}
+.in--cta:focus{outline-color:oklch(0.2 0.02 262)!important}
+.btn--hero:hover{background:oklch(0.2 0.02 262)!important;border-color:oklch(0.2 0.02 262)!important}
+.btn--hero:focus-visible{outline:3px solid oklch(0.2 0.02 262);outline-offset:2px}
+.btn--cta:hover{background:#fff!important;color:oklch(0.2 0.02 262)!important}
+.btn--cta:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.ks-form[aria-busy="true"] .btn{opacity:.6;cursor:progress}
+
+.status-line{margin:0;display:flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;color:oklch(0.2 0.02 262)}
+.status-line span{width:8px;height:8px;background:oklch(0.48 0.2 263);display:block;animation:ksblink 1.2s steps(1) infinite}
+
+.route-dot{position:absolute;top:1px;width:8px;height:8px;margin-left:-4px;background:oklch(0.48 0.2 263);animation:ksroute 5s cubic-bezier(.6,0,.4,1) infinite}
+
+.foot-link{color:oklch(0.85 0.006 262)}
+.foot-link:hover{color:#fff}
+.foot-copy{color:oklch(0.72 0.01 262);font-size:13px}
+.foot-copy a{color:inherit}
+.foot-copy a:hover{color:#fff}
+
+@keyframes ksroute{0%{left:0%;opacity:0}6%{opacity:1}94%{opacity:1}100%{left:100%;opacity:0}}
+@keyframes ksblink{50%{opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.route-dot{display:none}}
+
+/* 404 */
+.lost{max-width:1240px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(20px,5vw,48px) clamp(72px,10vw,144px);display:flex;flex-direction:column;gap:28px}
+.lost h1{margin:0;font-weight:800;font-size:clamp(56px,11vw,150px);line-height:0.88;letter-spacing:-0.055em}
+.lost h1 span{color:oklch(0.48 0.2 263)}
+.lost pre{margin:0;padding:18px 20px;background:oklch(0.2 0.02 262);color:oklch(0.93 0.005 262);font-family:'DM Mono',monospace;font-size:14px;line-height:1.75;overflow-x:auto;max-width:640px}
+.lost pre b{color:oklch(0.75 0.15 25);font-weight:400}
+.lost pre i{color:oklch(0.72 0.01 262);font-style:normal}

@@ -1,0 +1,5 @@
+# Keep Shipping security contact
+Contact: mailto:contact@keepshipping.run
+Expires: 2027-09-23T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://keepshipping.run/.well-known/security.txt

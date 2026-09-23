@@ -1,0 +1,30 @@
+<!DOCTYPE html><meta charset="utf-8"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap">
+<style>*{box-sizing:border-box}html,body{margin:0}
+:root{--bg:#eef0f3;--paper:#fbfcfd;--ink:#11161f;--blue:#1950cc;--muted:#3e434b}
+.d{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-weight:800;letter-spacing:-.055em;font-variation-settings:"opsz" 96}
+.m{font-family:"DM Mono",monospace}
+.sq{display:block;background:var(--blue)}
+.route{position:relative;height:14px}
+.route .l{position:absolute;left:0;right:0;top:6px;height:2px;background:var(--ink)}
+.route .n{position:absolute;inset:0;display:flex;justify-content:space-between}
+.route .n span{width:14px;height:14px;background:var(--paper);border:2px solid var(--ink);border-radius:50%}
+.route .n span.g{border-radius:0;border-color:var(--blue);transform:rotate(45deg)}
+.labels{display:flex;justify-content:space-between;margin-top:10px;color:var(--muted)}
+.labels span:nth-child(4){color:var(--blue)}
+</style>
+<style>body{width:1200px;height:630px;overflow:hidden;background:var(--bg);color:var(--ink);position:relative}
+.frame{position:absolute;inset:40px;display:flex;flex-direction:column;justify-content:space-between}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:30px}
+.brand{display:flex;align-items:center;gap:14px;font-family:"Bricolage Grotesque";font-weight:800;letter-spacing:-.02em}
+.tag{font-size:17px;letter-spacing:.06em;text-transform:uppercase;border:1.5px solid var(--ink);padding:8px 14px;background:var(--paper)}
+h1{margin:0;font-size:170px;line-height:.86}
+h1 b{color:var(--blue)}
+.sub{display:flex;justify-content:space-between;align-items:end;gap:40px}
+.sub p{margin:0;font-family:"Bricolage Grotesque";font-weight:700;font-size:44px;letter-spacing:-.025em}
+.pipe{width:470px;font-size:15px;padding:18px 20px 14px;border:1.5px solid var(--ink);background:var(--paper);box-shadow:8px 8px 0 var(--ink)}
+</style>
+<body><div class="frame">
+ <div class="top"><span class="brand"><i class="sq" style="width:22px;height:22px"></i>Keep Shipping</span><span class="tag m">Early access</span></div>
+ <h1 class="d">Keep shipping<b>.</b></h1>
+ <div class="sub"><p>Deploys you can read.</p><div class="pipe"><div class="route"><div class="l"></div><div class="n"><span></span><span></span><span></span><span class="g"></span><span></span><span></span></div></div><div class="labels m"><span>push</span><span>build</span><span>plan</span><span>review</span><span>apply</span><span>deploy</span></div></div></div>
+</div></body>

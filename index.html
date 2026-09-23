@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keep Shipping — Deploys you can read.</title>
+<meta name="description" content="One typed, readable workflow file per repo. Build OCI images, plan and apply Terraform/OpenTofu, deploy anywhere. Runs the same on your laptop as in CI. Early access.">
+<link rel="canonical" href="https://keepshipping.run/">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#eef0f3">
+<meta name="color-scheme" content="light">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Keep Shipping">
+<meta property="og:title" content="Keep Shipping — Deploys you can read.">
+<meta property="og:description" content="One typed workflow file per repo: build images, plan and apply infrastructure, wait for a human, deploy. Checked before anything runs. Early access.">
+<meta property="og:url" content="https://keepshipping.run/">
+<meta property="og:image" content="https://keepshipping.run/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Keep Shipping. Deploys you can read. A pipeline from push to deploy with a review gate.">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Keep Shipping — Deploys you can read.">
+<meta name="twitter:description" content="One typed workflow file per repo. Checked before anything runs, and the same on your laptop as in CI.">
+<meta name="twitter:image" content="https://keepshipping.run/assets/og.png">
+<meta name="twitter:image:alt" content="Keep Shipping. Deploys you can read.">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<link rel="alternate" type="text/plain" href="/llms.txt" title="LLM-readable summary">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/keepshipping.css">
+<script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","name":"Keep Shipping","url":"https://keepshipping.run/","logo":"https://keepshipping.run/assets/icon-512.png","email":"contact@keepshipping.run","sameAs":["https://github.com/Keep-Shipping"],"parentOrganization":{"@type":"Organization","name":"Factory Zero Pte. Ltd.","url":"https://factory0.ventures/"}},{"@context":"https://schema.org","@type":"WebSite","name":"Keep Shipping","url":"https://keepshipping.run/","description":"A typed, readable deploy workflow: one file per repo that builds OCI images, plans and applies Terraform/OpenTofu, waits for approval and deploys, locally and in CI."},{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Keep Shipping","applicationCategory":"DeveloperApplication","operatingSystem":"macOS, Linux, CI runners","description":"A deploy workflow engine with one typed workflow file per repository. Built-in steps for OCI images, Terraform and OpenTofu, approvals, Kubernetes, VMs and serverless. The same engine runs on a laptop and in CI. In development; early access list open.","url":"https://keepshipping.run/"},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is Keep Shipping?","acceptedAnswer":{"@type":"Answer","text":"A deploy workflow engine. Each repository has one typed workflow file that builds images, plans and applies infrastructure, waits for a human where you say so, and deploys. The file is checked before anything runs."}},{"@type":"Question","name":"Does it run locally?","acceptedAnswer":{"@type":"Answer","text":"That is the design: keepshipping run on a laptop uses the same engine, file and steps as the CI runner. Hardware, network and secrets still differ, and steps that can only run in CI are marked."}},{"@type":"Question","name":"Is it safe to let AI coding agents deploy with it?","acceptedAnswer":{"@type":"Answer","text":"A policy in the workflow file says what agents may do on their own and what waits for a person. Files that do not type-check never run, and destroys always go to a human."}},{"@type":"Question","name":"Can I use Keep Shipping today?","acceptedAnswer":{"@type":"Answer","text":"Not yet. Keep Shipping is in development. Join the early access list at keepshipping.run; invites go out in small batches."}}]}]</script>
+<script src="/assets/keepshipping.js" defer></script>
+</head>
+<body>
+<div class="page">
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header style="max-width:1240px;margin:0 auto;padding:20px clamp(20px,5vw,48px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <a href="/" aria-label="Keep Shipping home" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:oklch(0.2 0.02 262);font-weight:800;font-size:19px;letter-spacing:-0.02em">
+      <span aria-hidden="true" style="width:14px;height:14px;background:oklch(0.48 0.2 263);display:block"></span>
+      Keep Shipping
+    </a>
+    <nav aria-label="Primary" style="display:flex;align-items:center;gap:clamp(12px,3vw,28px);font-family:'DM Mono',monospace;font-size:14px;flex-wrap:wrap">
+      <a class="nav-link" href="#how">How it works</a>
+      <a class="nav-link" href="https://github.com/Keep-Shipping">GitHub</a>
+      <a class="nav-cta" href="#early-access">Early access</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section id="top" aria-labelledby="hero-title" style="max-width:1240px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(20px,5vw,48px) clamp(56px,8vw,112px)">
+      <h1 id="hero-title" style="margin:0;font-weight:800;font-size:clamp(60px,13.5vw,188px);line-height:0.86;letter-spacing:-0.055em;font-variation-settings:'opsz' 96">Keep shipping<span style="color:oklch(0.48 0.2 263)">.</span></h1>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:clamp(40px,5vw,72px);margin-top:clamp(32px,4vw,56px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:28px;max-width:520px">
+          <p style="margin:0;font-size:clamp(26px,3vw,36px);line-height:1.12;font-weight:700;letter-spacing:-0.025em">Deploys you can read.</p>
+          <p style="margin:0;font-size:19px;color:oklch(0.38 0.015 262);text-wrap:pretty">One typed workflow file per repo. It builds your images, plans and applies your infrastructure, waits for a human, and deploys. It's checked before anything runs, and it runs the same on your laptop as in CI.</p>
+
+          <p class="status-line"><span aria-hidden="true"></span>Early access · in development</p>
+
+          <form class="ks-form" action="mailto:contact@keepshipping.run?subject=Keep%20Shipping%20early%20access" method="post" enctype="text/plain" style="display:flex;flex-direction:column;gap:10px" novalidate="">
+            <label for="email-hero" style="font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;color:oklch(0.38 0.015 262)">Join the early access list</label>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <input id="email-hero" type="email" name="email" autocomplete="email" required="" placeholder="you@company.dev" aria-describedby="email-hero-status" class="in in--hero" style="flex:1 1 220px;min-width:0;height:52px;padding:0 16px;font:inherit;font-size:17px;color:oklch(0.2 0.02 262);background:oklch(0.99 0.002 255);border:1.5px solid oklch(0.2 0.02 262);border-radius:0;outline:none">
+              <button type="submit" class="btn btn--hero" style="flex:0 0 auto;height:52px;padding:0 22px;font:inherit;font-size:17px;font-weight:700;color:#fff;background:oklch(0.48 0.2 263);border:1.5px solid oklch(0.48 0.2 263);border-radius:0;cursor:pointer">Get early access</button>
+            </div>
+            <p id="email-hero-status" role="status" aria-live="polite" style="margin:0;min-height:22px;font-family:'DM Mono',monospace;font-size:14px;color:oklch(0.48 0.2 263)"></p>
+          </form>
+
+          <div style="display:flex;flex-wrap:wrap;gap:24px;font-family:'DM Mono',monospace;font-size:15px">
+            <a href="#how">See how it works →</a>
+            <a href="https://github.com/Keep-Shipping">Follow on GitHub →</a>
+          </div>
+        </div>
+
+        <figure style="margin:0;background:oklch(0.99 0.002 255);border:1.5px solid oklch(0.2 0.02 262);box-shadow:10px 10px 0 oklch(0.2 0.02 262);position:relative;min-width:0">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 16px;border-bottom:1.5px solid oklch(0.2 0.02 262);font-family:'DM Mono',monospace;font-size:13px">
+            <span style="font-weight:500">ship.ks</span>
+            <span style="color:oklch(0.38 0.015 262)">api · 23 lines</span>
+          </div>
+          <div aria-hidden="true" style="padding:18px 20px 14px;border-bottom:1px dashed oklch(0.8 0.01 262)">
+            <div style="position:relative;height:10px;margin:0 5px">
+              <div style="position:absolute;left:0;right:0;top:4px;height:2px;background:oklch(0.2 0.02 262)"></div>
+              <div style="position:absolute;inset:0;display:flex;justify-content:space-between">
+                <span style="width:10px;height:10px;background:oklch(0.99 0.002 255);border:2px solid oklch(0.2 0.02 262);border-radius:50%"></span>
+                <span style="width:10px;height:10px;background:oklch(0.99 0.002 255);border:2px solid oklch(0.2 0.02 262);border-radius:50%"></span>
+                <span style="width:10px;height:10px;background:oklch(0.99 0.002 255);border:2px solid oklch(0.2 0.02 262);border-radius:50%"></span>
+                <span style="width:10px;height:10px;background:oklch(0.99 0.002 255);border:2px solid oklch(0.48 0.2 263);transform:rotate(45deg)"></span>
+                <span style="width:10px;height:10px;background:oklch(0.99 0.002 255);border:2px solid oklch(0.2 0.02 262);border-radius:50%"></span>
+                <span style="width:10px;height:10px;background:oklch(0.99 0.002 255);border:2px solid oklch(0.2 0.02 262);border-radius:50%"></span>
+              </div>
+              <span class="route-dot" aria-hidden="true"></span>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-family:'DM Mono',monospace;font-size:11px;color:oklch(0.38 0.015 262)">
+              <span>push</span><span>build</span><span>plan</span><span style="color:oklch(0.48 0.2 263)">review</span><span>apply</span><span>deploy</span>
+            </div>
+          </div>
+          <pre style="margin:0;padding:16px 0 20px;overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.7"><code style="display:block;min-width:max-content;padding:0 20px"><span style="color:oklch(0.5 0.1 263);font-style:italic"># deploy the api: image → infra → prod
+</span><span style="color:oklch(0.44 0.015 262)">name:</span>  api
+<span style="color:oklch(0.44 0.015 262)">on:</span>    push main
+
+<span style="color:oklch(0.44 0.015 262)">steps:
+</span>  <span style="font-weight:500">build:</span>   <span style="color:oklch(0.48 0.2 263)">oci.image
+</span>    <span style="color:oklch(0.44 0.015 262)">from:</span>  ./Dockerfile
+    <span style="color:oklch(0.44 0.015 262)">push:</span>  ghcr.io/acme/api:{git.sha}
+    <span style="color:oklch(0.44 0.015 262)">sign:</span>  true
+
+  <span style="font-weight:500">plan:</span>    <span style="color:oklch(0.48 0.2 263)">tofu.plan
+</span>    <span style="color:oklch(0.44 0.015 262)">dir:</span>   ./infra/prod
+
+  <span style="font-weight:500">review:</span>  <span style="color:oklch(0.48 0.2 263)">approval
+</span>    <span style="color:oklch(0.44 0.015 262)">show:</span>  plan.changes
+    <span style="color:oklch(0.44 0.015 262)">from:</span>  @platform
+
+  <span style="font-weight:500">apply:</span>   <span style="color:oklch(0.48 0.2 263)">tofu.apply
+</span>    <span style="color:oklch(0.44 0.015 262)">plan:</span>  plan.file        <span style="color:oklch(0.5 0.1 263);font-style:italic"># the exact plan you approved
+</span>
+  <span style="font-weight:500">deploy:</span>  <span style="color:oklch(0.48 0.2 263)">k8s.rollout
+</span>    <span style="color:oklch(0.44 0.015 262)">image:</span> build.digest     <span style="color:oklch(0.5 0.1 263);font-style:italic"># oci.Digest, never a tag
+</span>    <span style="color:oklch(0.44 0.015 262)">to:</span>    apply.out.cluster
+    <span style="color:oklch(0.44 0.015 262)">wait:</span>  healthy, 5m</code></pre>
+          <div aria-hidden="true" style="position:absolute;right:18px;bottom:22px;transform:rotate(-8deg);border:2px solid oklch(0.48 0.2 263);color:oklch(0.48 0.2 263);padding:5px 10px;font-family:'DM Mono',monospace;font-size:12px;font-weight:500;letter-spacing:0.12em;background:oklch(0.99 0.002 255 / 0.85)">✓ TYPE-CHECKED</div>
+          <figcaption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Example Keep Shipping workflow: build and sign an OCI image, plan OpenTofu, wait for approval, apply, and roll out to Kubernetes.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section aria-labelledby="pain-title" style="border-top:1.5px solid oklch(0.2 0.02 262);border-bottom:1.5px solid oklch(0.2 0.02 262);background:oklch(0.99 0.002 255)">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(56px,8vw,104px) clamp(20px,5vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(32px,5vw,72px);align-items:center">
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.48 0.2 263)">01 / Push and pray</p>
+          <h2 id="pain-title" style="margin:0;font-size:clamp(34px,4.6vw,60px);line-height:1;letter-spacing:-0.04em;font-weight:800;text-wrap:balance">You shouldn't need eleven commits to change a pipeline.</h2>
+          <p style="margin:0;color:oklch(0.38 0.015 262);max-width:480px;text-wrap:pretty">Hundreds of lines of YAML nobody fully understands. Terraform and Docker held together with shell scripts. Every repo drifting a little. And the only way to test any of it is to push and wait.</p>
+        </div>
+        <div role="img" aria-label="A git log of eleven commits named variations of 'fix ci'" style="font-family:'DM Mono',monospace;font-size:clamp(13px,1.4vw,15px);line-height:1.9;border-left:1.5px solid oklch(0.2 0.02 262);padding-left:clamp(16px,3vw,28px);overflow-x:auto;white-space:nowrap">
+          <div style="color:oklch(0.44 0.015 262)">$ git log --oneline .ci/</div>
+          <div><span style="color:oklch(0.48 0.2 263)">e91a0c2</span>  fix ci</div>
+          <div><span style="color:oklch(0.48 0.2 263)">b73fd14</span>  fix ci again</div>
+          <div><span style="color:oklch(0.48 0.2 263)">40c2e8a</span>  try quoting it</div>
+          <div><span style="color:oklch(0.48 0.2 263)">8d1f3b7</span>  Revert "try quoting it"</div>
+          <div><span style="color:oklch(0.48 0.2 263)">f02a9e1</span>  indent??</div>
+          <div><span style="color:oklch(0.48 0.2 263)">3ce77b0</span>  copy deploy step from billing repo</div>
+          <div><span style="color:oklch(0.48 0.2 263)">a5519d3</span>  add deploy2.sh</div>
+          <div><span style="color:oklch(0.48 0.2 263)">71be0af</span>  ok now it runs terraform twice</div>
+          <div><span style="color:oklch(0.48 0.2 263)">cc0d6f8</span>  pls</div>
+          <div><span style="color:oklch(0.48 0.2 263)">92e4a10</span>  fix ci (final)</div>
+          <div><span style="color:oklch(0.48 0.2 263)">0b8f3c5</span>  fix ci (final) (2)</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" aria-labelledby="check-title" style="max-width:1240px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(20px,5vw,48px)">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:clamp(32px,5vw,72px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.48 0.2 263)">02 / Typed and validated</p>
+          <h2 id="check-title" style="margin:0;font-size:clamp(34px,4.6vw,60px);line-height:1;letter-spacing:-0.04em;font-weight:800;text-wrap:balance">Mistakes show up before the deploy, not halfway through it.</h2>
+          <p style="margin:0;color:oklch(0.38 0.015 262);max-width:480px;text-wrap:pretty">Every step has typed inputs and outputs. Wire an image tag where a digest belongs, misspell a step, or reference a plan that doesn't exist, and <code style="font-family:'DM Mono',monospace;font-size:0.9em">keepshipping check</code> tells you in under a second. Your editor does too.</p>
+          <p style="margin:0;max-width:760px;font-family:'DM Mono',monospace;font-size:13px;line-height:1.6;color:oklch(0.38 0.015 262);text-wrap:pretty"><strong style="font-weight:500;color:oklch(0.2 0.02 262)">Fine print:</strong> the checker catches wiring and type mistakes. It can't tell you that your tests are wrong or that the registry is down.</p>
+        </div>
+        <div style="background:oklch(0.2 0.02 262);color:oklch(0.93 0.005 262);font-family:'DM Mono',monospace;font-size:14px;line-height:1.75;padding:22px 24px;overflow-x:auto">
+          <div style="white-space:pre;min-width:max-content"><span style="color:oklch(0.72 0.01 262)">$</span> keepshipping check
+
+<span style="color:oklch(0.75 0.15 25)">✗ ship.ks:21</span>  deploy.image
+  expected <span style="color:oklch(0.8 0.1 263)">oci.Digest</span>, got <span style="color:oklch(0.8 0.1 263)">string
+</span>  <span style="color:oklch(0.72 0.01 262)">│
+</span><span style="color:oklch(0.72 0.01 262)">21 │</span>     image: build.tag
+  <span style="color:oklch(0.72 0.01 262)">│</span>            <span style="color:oklch(0.75 0.15 25)">^^^^^^^^^
+</span>  <span style="color:oklch(0.72 0.01 262)">hint:</span> use build.digest so prod runs
+        exactly the image you built
+
+<span style="color:oklch(0.72 0.01 262)">0 steps ran. Nothing was touched.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="local-title" style="background:oklch(0.2 0.02 262);color:oklch(0.95 0.004 262)">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(20px,5vw,48px);display:flex;flex-direction:column;gap:clamp(36px,5vw,56px)">
+        <div style="display:flex;flex-direction:column;gap:18px;max-width:760px">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.8 0.1 263)">03 / Local = CI</p>
+          <h2 id="local-title" style="margin:0;font-size:clamp(34px,4.6vw,60px);line-height:1;letter-spacing:-0.04em;font-weight:800;text-wrap:balance">Run the pipeline before you push it.</h2>
+          <p style="margin:0;color:oklch(0.8 0.008 262);max-width:560px;text-wrap:pretty"><code style="font-family:'DM Mono',monospace;font-size:0.9em;color:#fff">keepshipping run</code> on your laptop uses the same engine, the same file and the same steps as the CI runner. If it works here, it works there.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px">
+          <div style="border:1.5px solid oklch(0.45 0.02 262);min-width:0">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1.5px solid oklch(0.45 0.02 262);font-family:'DM Mono',monospace;font-size:13px;color:oklch(0.8 0.008 262)"><span>you@laptop ~/api</span><span>local</span></div>
+            <div style="padding:18px 20px;overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.8;white-space:pre"><span style="color:oklch(0.72 0.01 262)">$</span> keepshipping run
+<span style="color:oklch(0.8 0.1 263)">▸ build </span>  sha256:9f2c…e1  signed    <span style="color:oklch(0.72 0.01 262)">38s
+</span><span style="color:oklch(0.8 0.1 263)">▸ plan  </span>  +2 ~1 -0                  <span style="color:oklch(0.72 0.01 262)">11s
+</span><span style="color:oklch(0.8 0.1 263)">▸ review</span>  approve 3 changes? <span style="color:#fff">y
+</span><span style="color:oklch(0.8 0.1 263)">▸ apply </span>  3 resources               <span style="color:oklch(0.72 0.01 262)">42s
+</span><span style="color:oklch(0.8 0.1 263)">▸ deploy</span>  4/4 pods healthy          <span style="color:oklch(0.72 0.01 262)">27s
+</span><span style="color:oklch(0.8 0.14 150)">✓ shipped api@a41c9e in 2m 18s</span></div>
+          </div>
+          <div style="border:1.5px solid oklch(0.45 0.02 262);min-width:0">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1.5px solid oklch(0.45 0.02 262);font-family:'DM Mono',monospace;font-size:13px;color:oklch(0.8 0.008 262)"><span>runner-07 · push main</span><span>cloud</span></div>
+            <div style="padding:18px 20px;overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.8;white-space:pre"><span style="color:oklch(0.72 0.01 262)">$</span> keepshipping run
+<span style="color:oklch(0.8 0.1 263)">▸ build </span>  sha256:9f2c…e1  signed    <span style="color:oklch(0.72 0.01 262)">36s
+</span><span style="color:oklch(0.8 0.1 263)">▸ plan  </span>  +2 ~1 -0                  <span style="color:oklch(0.72 0.01 262)">10s
+</span><span style="color:oklch(0.8 0.1 263)">▸ review</span>  approved by @platform
+<span style="color:oklch(0.8 0.1 263)">▸ apply </span>  3 resources               <span style="color:oklch(0.72 0.01 262)">41s
+</span><span style="color:oklch(0.8 0.1 263)">▸ deploy</span>  4/4 pods healthy          <span style="color:oklch(0.72 0.01 262)">27s
+</span><span style="color:oklch(0.8 0.14 150)">✓ shipped api@a41c9e in 2m 14s</span></div>
+          </div>
+        </div>
+        <p style="margin:0;font-family:'DM Mono',monospace;font-size:14px;color:oklch(0.8 0.008 262)">Same digest. Same plan. Same order. The only difference is who pressed <span style="color:#fff">y</span>.</p>
+        <p style="margin:0;max-width:760px;font-family:'DM Mono',monospace;font-size:13px;line-height:1.6;color:oklch(0.8 0.008 262);text-wrap:pretty"><strong style="font-weight:500;color:#fff">Fine print:</strong> the engine and steps are identical. Hardware, network and secrets still differ. Steps that can only run in CI are marked, and <code style="font-family:'DM Mono',monospace">check</code> tells you before you start.</p>
+      </div>
+    </section>
+
+    <section aria-labelledby="builtin-title" style="max-width:1240px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(20px,5vw,48px);display:flex;flex-direction:column;gap:clamp(36px,5vw,56px)">
+      <div style="display:flex;flex-direction:column;gap:18px;max-width:760px">
+        <p style="margin:0;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.48 0.2 263)">04 / Built in, not bolted on</p>
+        <h2 id="builtin-title" style="margin:0;font-size:clamp(34px,4.6vw,60px);line-height:1;letter-spacing:-0.04em;font-weight:800;text-wrap:balance">Containers and infrastructure are steps, not shell scripts.</h2>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:16px">
+        <article style="background:oklch(0.99 0.002 255);border:1.5px solid oklch(0.2 0.02 262);padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:16px">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:14px;color:oklch(0.48 0.2 263)">oci.image · oci.artifact</p>
+          <h3 style="margin:0;font-size:28px;line-height:1.1;letter-spacing:-0.025em;font-weight:700">Build it, sign it, push it.</h3>
+          <p style="margin:0;color:oklch(0.38 0.015 262);text-wrap:pretty">Use your Dockerfile. Push to any OCI registry. Signing is one line. The step returns a digest, so every later step deploys exactly what was built, never whatever <code style="font-family:'DM Mono',monospace;font-size:0.9em">latest</code> points at today. Charts, SBOMs and other OCI artifacts work the same way.</p>
+          <div style="margin-top:auto;padding-top:16px;border-top:1px dashed oklch(0.8 0.01 262);font-family:'DM Mono',monospace;font-size:13px;line-height:1.8;color:oklch(0.38 0.015 262);overflow-x:auto;white-space:pre">build.digest  <span style="color:oklch(0.2 0.02 262)">sha256:9f2c4a…e1
+</span>build.ref     <span style="color:oklch(0.2 0.02 262)">ghcr.io/acme/api@sha256:9f2c…
+</span>build.signed  <span style="color:oklch(0.2 0.02 262)">true</span></div>
+        </article>
+
+        <article style="background:oklch(0.99 0.002 255);border:1.5px solid oklch(0.2 0.02 262);padding:clamp(24px,3vw,36px);display:flex;flex-direction:column;gap:16px">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:14px;color:oklch(0.48 0.2 263)">tofu.plan · terraform.apply</p>
+          <h3 style="margin:0;font-size:28px;line-height:1.1;letter-spacing:-0.025em;font-weight:700">Read the plan. Then apply that plan.</h3>
+          <p style="margin:0;color:oklch(0.38 0.015 262);text-wrap:pretty">Terraform and OpenTofu both work. The plan is saved, shown to a reviewer in plain terms, and apply runs that exact file. If the world changed since the plan, apply stops and asks again.</p>
+          <p style="margin:0;max-width:760px;font-family:'DM Mono',monospace;font-size:13px;line-height:1.6;color:oklch(0.38 0.015 262);text-wrap:pretty"><strong style="font-weight:500;color:oklch(0.2 0.02 262)">Fine print:</strong> a clean plan shows what will change, not whether you should change it. That part is still your call.</p>
+          <div style="margin-top:auto;padding-top:16px;border-top:1px dashed oklch(0.8 0.01 262);font-family:'DM Mono',monospace;font-size:13px;line-height:1.8;overflow-x:auto;white-space:pre"><span style="color:oklch(0.45 0.13 150)">+</span> aws_lb.api
+<span style="color:oklch(0.48 0.2 263)">~</span> aws_ecs_service.api   <span style="color:oklch(0.38 0.015 262)">count 2 → 4
+</span><span style="color:oklch(0.45 0.13 150)">+</span> aws_route53_record.api
+<span style="color:oklch(0.38 0.015 262)">2 to add · 1 to change · 0 to destroy</span></div>
+        </article>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));border:1.5px solid oklch(0.2 0.02 262)">
+        <div style="padding:22px 24px;display:flex;flex-direction:column;gap:6px;border-right:1px solid oklch(0.86 0.008 262);border-bottom:1px solid oklch(0.86 0.008 262)">
+          <span style="font-family:'DM Mono',monospace;font-size:14px;color:oklch(0.48 0.2 263)">k8s.rollout</span>
+          <strong style="font-size:20px;letter-spacing:-0.02em">Kubernetes</strong>
+          <span style="color:oklch(0.38 0.015 262);font-size:16px">Applies manifests or charts, waits for healthy pods, rolls back if they aren't.</span>
+        </div>
+        <div style="padding:22px 24px;display:flex;flex-direction:column;gap:6px;border-right:1px solid oklch(0.86 0.008 262);border-bottom:1px solid oklch(0.86 0.008 262)">
+          <span style="font-family:'DM Mono',monospace;font-size:14px;color:oklch(0.48 0.2 263)">vm.deploy</span>
+          <strong style="font-size:20px;letter-spacing:-0.02em">Virtual machines</strong>
+          <span style="color:oklch(0.38 0.015 262);font-size:16px">Rolling deploys over SSH, a few hosts at a time, with health checks between.</span>
+        </div>
+        <div style="padding:22px 24px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid oklch(0.86 0.008 262)">
+          <span style="font-family:'DM Mono',monospace;font-size:14px;color:oklch(0.48 0.2 263)">fn.deploy</span>
+          <strong style="font-size:20px;letter-spacing:-0.02em">Serverless</strong>
+          <span style="color:oklch(0.38 0.015 262);font-size:16px">Publishes a version, shifts traffic in steps, keeps the previous one warm.</span>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="blocks-title" style="border-top:1.5px solid oklch(0.2 0.02 262);background:oklch(0.99 0.002 255)">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(20px,5vw,48px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:clamp(48px,6vw,80px)">
+        <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.48 0.2 263)">05 / Reusable blocks</p>
+          <h2 id="blocks-title" style="margin:0;font-size:clamp(30px,3.6vw,46px);line-height:1.02;letter-spacing:-0.035em;font-weight:800;text-wrap:balance">Write it once. Use it in forty repos.</h2>
+          <p style="margin:0;color:oklch(0.38 0.015 262);text-wrap:pretty">Package steps as a typed, versioned block. Each repo pins a version and upgrades on its own schedule. No copy-pasted YAML, no quiet drift.</p>
+          <pre style="margin:0;padding:18px 20px;border:1.5px solid oklch(0.2 0.02 262);overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.7;background:oklch(0.955 0.004 255)"><code><span style="color:oklch(0.5 0.1 263);font-style:italic"># acme/blocks · web-service@v3
+</span><span style="color:oklch(0.44 0.015 262)">block:</span>  web-service
+<span style="color:oklch(0.44 0.015 262)">inputs:
+</span>  <span style="color:oklch(0.44 0.015 262)">image:</span>    <span style="color:oklch(0.48 0.2 263)">oci.Digest
+</span>  <span style="color:oklch(0.44 0.015 262)">domain:</span>   <span style="color:oklch(0.48 0.2 263)">string
+</span>  <span style="color:oklch(0.44 0.015 262)">replicas:</span> <span style="color:oklch(0.48 0.2 263)">int</span> = 2
+
+<span style="color:oklch(0.5 0.1 263);font-style:italic"># in any repo
+</span>  <span style="font-weight:500">deploy:</span>   <span style="color:oklch(0.48 0.2 263)">acme/web-service@v3
+</span>    <span style="color:oklch(0.44 0.015 262)">image:</span>  build.digest
+    <span style="color:oklch(0.44 0.015 262)">domain:</span> api.acme.dev</code></pre>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.48 0.2 263)">06 / Escape hatch</p>
+          <h2 style="margin:0;font-size:clamp(30px,3.6vw,46px);line-height:1.02;letter-spacing:-0.035em;font-weight:800;text-wrap:balance">When a step needs real code, write real code.</h2>
+          <p style="margin:0;color:oklch(0.38 0.015 262);text-wrap:pretty">Database migrations, odd APIs, that one legacy thing. Drop into a script with typed inputs and outputs, and it runs locally and in CI like every other step.</p>
+          <pre style="margin:0;padding:18px 20px;border:1.5px solid oklch(0.2 0.02 262);overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.7;background:oklch(0.955 0.004 255)"><code><span style="color:oklch(0.5 0.1 263);font-style:italic">// ship/migrate.ts
+</span><span style="color:oklch(0.48 0.2 263)">export default</span> step({
+  inputs: { db: secret() },
+  <span style="color:oklch(0.48 0.2 263)">async</span> run({ db, log }) {
+    <span style="color:oklch(0.48 0.2 263)">const</span> n = <span style="color:oklch(0.48 0.2 263)">await</span> migrate(db)
+    log(`applied ${n} migrations`)
+    <span style="color:oklch(0.48 0.2 263)">return</span> { applied: n }
+  },
+})</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="agents-title" style="border-top:1.5px solid oklch(0.2 0.02 262)">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(20px,5vw,48px);display:flex;flex-direction:column;gap:clamp(36px,5vw,56px)">
+        <div style="display:flex;flex-direction:column;gap:18px;max-width:760px">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.48 0.2 263)">07 / Safe for AI agents</p>
+          <h2 id="agents-title" style="margin:0;font-size:clamp(34px,4.6vw,60px);line-height:1;letter-spacing:-0.04em;font-weight:800;text-wrap:balance">Let agents ship. Keep a human on the button.</h2>
+          <p style="margin:0;color:oklch(0.38 0.015 262);max-width:560px;text-wrap:pretty">Coding agents can write, check and run your workflow. They can't guess their way into prod: a file that doesn't type-check never runs, and anything risky waits for a person.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px">
+          <div style="background:oklch(0.99 0.002 255);border:1.5px solid oklch(0.2 0.02 262);min-width:0">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1.5px solid oklch(0.2 0.02 262);font-family:'DM Mono',monospace;font-size:13px"><span style="font-weight:500">ship.ks · policy</span><span style="color:oklch(0.38 0.015 262)">you decide the line</span></div>
+            <pre style="margin:0;padding:18px 20px;overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.7"><code><span style="color:oklch(0.44 0.015 262)">policy:</span>
+  <span style="font-weight:500">agents:</span>
+    <span style="color:oklch(0.44 0.015 262)">can:</span>    check, build, plan, deploy staging
+    <span style="color:oklch(0.44 0.015 262)">ask:</span>    @platform
+    <span style="color:oklch(0.44 0.015 262)">before:</span> apply, deploy prod, destroy
+    <span style="color:oklch(0.44 0.015 262)">never:</span>  read secrets
+<span style="color:oklch(0.5 0.1 263);font-style:italic"># humans follow the same file, minus the leash
+</span></code></pre>
+          </div>
+
+          <div style="background:oklch(0.2 0.02 262);color:oklch(0.93 0.005 262);min-width:0">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1.5px solid oklch(0.45 0.02 262);font-family:'DM Mono',monospace;font-size:13px;color:oklch(0.8 0.008 262)"><span>agent · pr #412</span><span>--as agent</span></div>
+            <div style="padding:18px 20px;overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.8;white-space:pre"><span style="color:oklch(0.72 0.01 262)">$</span> keepshipping run --as agent
+<span style="color:oklch(0.8 0.14 150)">✓ check </span>  ship.ks is valid
+<span style="color:oklch(0.8 0.1 263)">▸ build </span>  sha256:4be1…07  signed
+<span style="color:oklch(0.8 0.1 263)">▸ plan  </span>  +1 ~0 <span style="color:oklch(0.75 0.15 25)">-1</span>  1 destroy
+<span style="color:#fff">⏸ review</span>  waiting on a human
+          @platform notified, plan attached
+<span style="color:oklch(0.72 0.01 262)">nothing applied. agent is free to wait.</span></div>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:18px;max-width:760px;margin-top:clamp(8px,2vw,24px)">
+          <h3 style="margin:0;font-size:clamp(28px,3.2vw,40px);line-height:1.05;letter-spacing:-0.03em;font-weight:800;text-wrap:balance">Ask a human only when it matters.</h3>
+          <p style="margin:0;color:oklch(0.38 0.015 262);max-width:560px;text-wrap:pretty">A <code style="font-family:'DM Mono',monospace;font-size:0.9em">decide</code> step sends the plan to <a href="https://typesafe.ai/blog/introducing-system-one-models-and-jev">Jev</a>, a typed decision model from TypeSafe AI. It returns one of the answers you defined plus a confidence score, so the checker validates it like any other step. Low-risk, high-confidence changes go through on their own. Everything else waits for a reviewer, with the reason attached.</p>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px">
+          <div style="background:oklch(0.99 0.002 255);border:1.5px solid oklch(0.2 0.02 262);min-width:0">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1.5px solid oklch(0.2 0.02 262);font-family:'DM Mono',monospace;font-size:13px"><span style="font-weight:500">ship.ks · decide</span><span style="color:oklch(0.38 0.015 262)">typed answer + confidence</span></div>
+            <pre style="margin:0;padding:18px 20px;overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.7"><code>  <span style="font-weight:500">risk:</span>    <span style="color:oklch(0.48 0.2 263)">decide</span>
+    <span style="color:oklch(0.44 0.015 262)">model:</span>   typesafe/jev
+    <span style="color:oklch(0.44 0.015 262)">ask:</span>     "How risky is this plan?"
+    <span style="color:oklch(0.44 0.015 262)">input:</span>   plan.changes
+    <span style="color:oklch(0.44 0.015 262)">returns:</span> <span style="color:oklch(0.48 0.2 263)">low | medium | high</span>
+
+  <span style="font-weight:500">review:</span>  <span style="color:oklch(0.48 0.2 263)">approval</span>
+    <span style="color:oklch(0.44 0.015 262)">auto:</span>    risk is low ≥ 0.95
+             and plan.destroys == 0
+    <span style="color:oklch(0.44 0.015 262)">else:</span>    ask @platform, show risk.reason</code></pre>
+          </div>
+
+          <div style="background:oklch(0.2 0.02 262);color:oklch(0.93 0.005 262);min-width:0">
+            <div style="display:flex;justify-content:space-between;gap:12px;padding:10px 16px;border-bottom:1.5px solid oklch(0.45 0.02 262);font-family:'DM Mono',monospace;font-size:13px;color:oklch(0.8 0.008 262)"><span>two runs, same file</span><span>--as agent</span></div>
+            <div style="padding:18px 20px;overflow-x:auto;font-family:'DM Mono',monospace;font-size:14px;line-height:1.8;white-space:pre"><span style="color:oklch(0.72 0.01 262)"># pr #412 · bump replicas 2 → 4
+</span><span style="color:oklch(0.8 0.1 263)">▸ risk  </span>  low     0.97  1 change, 0 destroys
+<span style="color:oklch(0.8 0.14 150)">✓ review</span>  auto-approved by policy
+
+<span style="color:oklch(0.72 0.01 262)"># pr #418 · rename database module
+</span><span style="color:oklch(0.8 0.1 263)">▸ risk  </span>  <span style="color:oklch(0.75 0.15 25)">high</span>    0.91  replaces aws_db_instance.main
+<span style="color:#fff">⏸ review</span>  waiting on @platform</div>
+          </div>
+        </div>
+        <p style="margin:0;max-width:760px;font-family:'DM Mono',monospace;font-size:13px;line-height:1.6;color:oklch(0.38 0.015 262);text-wrap:pretty"><strong style="font-weight:500;color:oklch(0.2 0.02 262)">Fine print:</strong> Jev answers in milliseconds and only returns the answers you defined, but it can still be wrong. A confidence score is a number, not a promise. You set the threshold, destroys always go to a human, and every decision is logged with its score.</p>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));border:1.5px solid oklch(0.2 0.02 262);background:oklch(0.99 0.002 255)">
+          <div style="padding:22px 24px;display:flex;flex-direction:column;gap:6px;border-right:1px solid oklch(0.86 0.008 262);border-bottom:1px solid oklch(0.86 0.008 262)">
+            <strong style="font-size:20px;letter-spacing:-0.02em">Wrong files don't run</strong>
+            <span style="color:oklch(0.38 0.015 262);font-size:16px">Typed steps and exact error messages give agents something to fix, instead of a failed job to reinterpret.</span>
+          </div>
+          <div style="padding:22px 24px;display:flex;flex-direction:column;gap:6px;border-right:1px solid oklch(0.86 0.008 262);border-bottom:1px solid oklch(0.86 0.008 262)">
+            <strong style="font-size:20px;letter-spacing:-0.02em">Approval where it matters</strong>
+            <span style="color:oklch(0.38 0.015 262);font-size:16px">Gate apply, prod or destroy. The reviewer sees the plan and the diff, then approves from chat, CLI or web.</span>
+          </div>
+          <div style="padding:22px 24px;display:flex;flex-direction:column;gap:6px;border-bottom:1px solid oklch(0.86 0.008 262)">
+            <strong style="font-size:20px;letter-spacing:-0.02em">Every action signed</strong>
+            <span style="color:oklch(0.38 0.015 262);font-size:16px">The run log records who did what: which agent proposed it, which human approved it, which digest shipped.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section aria-labelledby="compare-title" style="border-top:1.5px solid oklch(0.2 0.02 262)">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(20px,5vw,48px);display:flex;flex-direction:column;gap:clamp(32px,4vw,48px)">
+        <div style="display:flex;flex-direction:column;gap:18px;max-width:760px">
+          <p style="margin:0;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;color:oklch(0.48 0.2 263)">08 / Honest comparison</p>
+          <h2 id="compare-title" style="margin:0;font-size:clamp(34px,4.6vw,60px);line-height:1;letter-spacing:-0.04em;font-weight:800;text-wrap:balance">What you're probably using now.</h2>
+          <p style="margin:0;color:oklch(0.38 0.015 262);max-width:560px;text-wrap:pretty">Including the rows where it wins.</p>
+        </div>
+        <div style="overflow-x:auto;border:1.5px solid oklch(0.2 0.02 262);background:oklch(0.99 0.002 255)" tabindex="0" role="region" aria-label="Comparison table, scrolls horizontally">
+          <table style="width:100%;min-width:760px;border-collapse:collapse;font-size:16px;line-height:1.4">
+            <thead>
+              <tr style="text-align:left;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.04em;text-transform:uppercase">
+                <th scope="col" style="padding:16px 20px;border-bottom:1.5px solid oklch(0.2 0.02 262);width:22%;font-weight:500;color:oklch(0.38 0.015 262)"></th>
+                <th scope="col" style="padding:16px 20px;border-bottom:1.5px solid oklch(0.2 0.02 262);width:26%;font-weight:500">YAML-based CI</th>
+                <th scope="col" style="padding:16px 20px;border-bottom:1.5px solid oklch(0.2 0.02 262);width:26%;font-weight:500">Shell scripts, glued</th>
+                <th scope="col" style="padding:16px 20px;border-bottom:1.5px solid oklch(0.2 0.02 262);width:26%;font-weight:500;background:oklch(0.48 0.2 263);color:#fff">Keep Shipping</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row" style="text-align:left;padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);font-weight:700">Mistakes found</th>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">When the job reaches that line</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">When the script reaches that line</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);background:oklch(0.95 0.025 263)">Before anything runs</td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left;padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);font-weight:700">Test locally</th>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Mostly no. Push and wait.</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Yes, if your laptop matches the runner</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);background:oklch(0.95 0.025 263)">Yes. Same engine as CI.</td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left;padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);font-weight:700">Containers and IaC</th>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Community plugins of varying age</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Whatever you wrote in 2021</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);background:oklch(0.95 0.025 263)">Built in: OCI, Terraform, OpenTofu</td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left;padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);font-weight:700">Review plan before apply</th>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Possible, with artifacts and manual jobs</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Someone reads the terminal</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);background:oklch(0.95 0.025 263)">One approval step</td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left;padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);font-weight:700">Sharing across repos</th>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Templates, or copy-paste</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Copy-paste</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);background:oklch(0.95 0.025 263)">Typed, versioned blocks</td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left;padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);font-weight:700">AI agents</th>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Push commits and read logs until green</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);color:oklch(0.38 0.015 262)">Can run anything the shell allows</td>
+                <td style="padding:16px 20px;border-bottom:1px solid oklch(0.86 0.008 262);background:oklch(0.95 0.025 263)">Checked first, scoped by policy, human approval for risky steps</td>
+              </tr>
+              <tr>
+                <th scope="row" style="text-align:left;padding:16px 20px;font-weight:700">Maturity</th>
+                <td style="padding:16px 20px;color:oklch(0.2 0.02 262)">Huge ecosystem, years of production use</td>
+                <td style="padding:16px 20px;color:oklch(0.2 0.02 262)">Runs anywhere bash does</td>
+                <td style="padding:16px 20px;background:oklch(0.95 0.025 263)">New. That's why it's early access.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="early-access" aria-labelledby="cta-title" style="background:oklch(0.48 0.2 263);color:#fff">
+      <div style="max-width:1240px;margin:0 auto;padding:clamp(72px,10vw,144px) clamp(20px,5vw,48px);display:flex;flex-direction:column;gap:32px">
+        <p style="margin:0;font-family:'DM Mono',monospace;font-size:14px;letter-spacing:0.04em">Plan. Apply. Ship. Repeat.</p>
+        <h2 id="cta-title" style="margin:0;font-size:clamp(52px,10vw,150px);line-height:0.88;letter-spacing:-0.055em;font-weight:800">Go home on time.</h2>
+        <p style="margin:0;font-size:19px;max-width:520px;text-wrap:pretty">Early access opens in small batches. One email when your invite is ready, nothing else.</p>
+        <p class="status-line"><span aria-hidden="true"></span>Early access · in development</p>
+
+          <form class="ks-form" action="mailto:contact@keepshipping.run?subject=Keep%20Shipping%20early%20access" method="post" enctype="text/plain" style="display:flex;flex-direction:column;gap:10px;max-width:620px" novalidate="">
+          <label for="email-cta" style="font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.04em;text-transform:uppercase">Work email</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <input id="email-cta" type="email" name="email" autocomplete="email" required="" placeholder="you@company.dev" aria-describedby="email-cta-status" class="in in--cta" style="flex:1 1 220px;min-width:0;height:56px;padding:0 16px;font:inherit;font-size:17px;color:oklch(0.2 0.02 262);background:#fff;border:1.5px solid #fff;border-radius:0;outline:none">
+            <button type="submit" class="btn btn--cta" style="flex:0 0 auto;height:56px;padding:0 24px;font:inherit;font-size:17px;font-weight:700;color:#fff;background:oklch(0.2 0.02 262);border:1.5px solid oklch(0.2 0.02 262);border-radius:0;cursor:pointer">Get early access</button>
+          </div>
+          <p id="email-cta-status" role="status" aria-live="polite" style="margin:0;min-height:22px;font-family:'DM Mono',monospace;font-size:14px"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer style="background:oklch(0.2 0.02 262);color:oklch(0.85 0.006 262)">
+    <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,5vw,48px);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;font-family:'DM Mono',monospace;font-size:14px">
+      <span style="display:flex;align-items:center;gap:10px;color:#fff"><span aria-hidden="true" style="width:10px;height:10px;background:oklch(0.62 0.17 263);display:block"></span>keepshipping.run</span>
+      <span class="foot-copy">© 2026 <a href="https://factory0.ventures/">Factory Zero Pte. Ltd.</a> · Keep Shipping is a Factory Zero venture</span>
+      <nav aria-label="Footer" style="display:flex;gap:24px;flex-wrap:wrap">
+        <a class="foot-link" href="#how">How it works</a>
+        <a class="foot-link" href="https://github.com/Keep-Shipping">GitHub</a>
+        <a class="foot-link" href="#early-access">Early access</a>
+        <a class="foot-link" href="/llms.txt">llms.txt</a>
+      </nav>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

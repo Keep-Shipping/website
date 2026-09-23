@@ -1,0 +1,8 @@
+# Keep Shipping. https://keepshipping.run
+# Answer engines and AI crawlers are welcome. /llms.txt is a plain-text summary
+# for machine readers, including what exists today and what is planned.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://keepshipping.run/sitemap.xml

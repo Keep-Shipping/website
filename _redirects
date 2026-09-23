@@ -1,0 +1,3 @@
+# Cloudflare Pages redirects. Temporary (302) on purpose: the targets may move.
+/github   https://github.com/Keep-Shipping   302
+/source   https://github.com/Keep-Shipping/website   302

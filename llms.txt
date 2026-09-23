@@ -1,0 +1,34 @@
+# Keep Shipping
+
+> Keep Shipping is a deploy workflow engine. Each repository has one typed, readable workflow file (ship.ks) that builds OCI images, plans and applies Terraform/OpenTofu, waits for a human where you say so, and deploys to Kubernetes, VMs or serverless. The file is type-checked before anything runs, and the same engine runs it on a laptop and in CI.
+
+Tagline: Deploys you can read.
+
+## Status
+In development, not generally available. The website and the early-access list are live; the list is an email to contact@keepshipping.run for now. The CLI (keepshipping check, keepshipping run), the step library, the runner and the Jev decide step are being built. The workflow examples, CLI output and timings on the site show the planned design, not measurements.
+
+## The problem
+Hundreds of lines of CI YAML nobody fully understands, Terraform and Docker glued together with shell scripts, every repo drifting a little, and no way to test a pipeline except to push it and wait.
+
+## How it works (planned)
+- One typed workflow file per repo. Every step has typed inputs and outputs, so wiring an image tag where a digest belongs, misspelling a step or referencing a plan that does not exist fails `keepshipping check` before anything runs. The checker catches wiring and type mistakes; it cannot tell you your tests are wrong or that a registry is down.
+- Local = CI. `keepshipping run` on a laptop uses the same engine, file and steps as the CI runner. Hardware, network and secrets still differ; steps that can only run in CI are marked.
+- Built-in steps: oci.image and oci.artifact (build, sign, push; returns a digest so later steps deploy exactly what was built), tofu.plan / terraform.apply (the saved plan is shown to a reviewer and apply runs that exact plan), approval, k8s.rollout, vm.deploy (rolling over SSH), fn.deploy (serverless, stepped traffic shift).
+- Reusable blocks: typed, versioned step packages; each repo pins a version.
+- Escape hatch: a step can be real code (TypeScript) with typed inputs and outputs, run locally and in CI like any other step.
+
+## AI agents
+A policy block in the workflow says what coding agents may do alone (e.g. check, build, plan, deploy staging) and what waits for a named human (apply, deploy prod, destroy). Files that do not type-check never run. A `decide` step sends a plan to Jev, TypeSafe AI's typed decision model (https://typesafe.ai/blog/introducing-system-one-models-and-jev), which returns one of the answers you defined plus a confidence score; low-risk, high-confidence changes can auto-approve, everything else waits for a reviewer. Destroys always go to a human. Jev can be wrong; a confidence score is not a promise.
+
+## Compared with alternatives
+- YAML-based CI: mistakes found when the job reaches that line; mostly cannot test locally; huge ecosystem and years of production use
+- Shell scripts: run anywhere bash does; copy-pasted between repos
+- Keep Shipping: mistakes found before anything runs; same engine locally and in CI; new, which is why it is early access
+
+## Owner
+Keep Shipping is a venture of Factory Zero Pte. Ltd. (https://factory0.ventures/), run as a division of that company.
+
+## Links
+- Site: https://keepshipping.run/
+- Early access: https://keepshipping.run/#early-access (or email contact@keepshipping.run)
+- GitHub: https://github.com/Keep-Shipping
