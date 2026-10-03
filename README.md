@@ -37,6 +37,17 @@ Keep Shipping is in development. So:
 
 When something ships, change `index.html` and `llms.txt` together.
 
+## The "Built with" strip
+
+The footer lists what Keep Shipping is built with: the `uses` of FZ-012 in the
+Factory Zero registry (`Factory-Zero/website`, `assets/fz-data.js`, published as
+https://factory0.ventures/stack.json), each marked planned unless it is in use
+today. `tools/built-with.json` is a vendored copy of that entry and
+`tools/built-with.py` writes the strip between the `built-with` markers; the
+page never fetches it. Change the registry first, then run
+`python3 tools/built-with.py --pull`, and `--check` to see whether the page is
+stale. `llms.txt` repeats the list; keep the two together.
+
 ## Files
 
 | Path | What it is |
