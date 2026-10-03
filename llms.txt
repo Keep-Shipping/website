@@ -32,3 +32,11 @@ Keep Shipping is a venture of Factory Zero Pte. Ltd. (https://factory0.ventures/
 - Site: https://keepshipping.run/
 - Early access: https://keepshipping.run/#early-access (or email contact@keepshipping.run)
 - GitHub: https://github.com/Keep-Shipping
+
+## Planned: Cloudflare console
+A console for every Cloudflare resource (zones, DNS, Workers, Pages, D1, R2, custom domains, email
+routing, security settings) that never changes Cloudflare directly: each change becomes Terraform in a
+pull request, is planned and shown, approved by a person, then applied and deployed by a ship.ks run.
+Import with an empty plan, nightly drift checks, security baseline as policy, deploy every site from main
+with rollback. Hosted on Cloudflare (Workers, D1, R2, Containers for OpenTofu, Workflows for approvals).
+AWS next, starting with SES. The fleet table on the page is an illustration. Plan: https://github.com/Keep-Shipping/harness/issues/166

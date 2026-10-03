@@ -41,7 +41,7 @@ When something ships, change `index.html` and `llms.txt` together.
 
 | Path | What it is |
 | :--- | :--- |
-| `index.html` | The page: hero with `ship.ks`, 01 push and pray, 02 typed, 03 local = CI, 04 built in, 05 blocks, 06 escape hatch, 07 agents and Jev, 08 comparison, early access |
+| `index.html` | The page: hero with `ship.ks`, 01 push and pray, 02 typed, 03 local = CI, 04 built in, 05 blocks, 06 escape hatch, 07 agents and Jev, 08 Cloudflare console (planned, Keep-Shipping/harness#166), 09 comparison, early access |
 | `assets/keepshipping.css`, `assets/keepshipping.js` | Base styles, hover/focus states, the route animation; the form handler |
 | `404.html` | Served for unknown paths, so they return 404 instead of the home page |
 | `llms.txt`, `robots.txt`, `sitemap.xml` | Machine-readable summary (status, design, comparison), crawler rules, sitemap |
