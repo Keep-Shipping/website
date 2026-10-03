@@ -28,6 +28,16 @@ A policy block in the workflow says what coding agents may do alone (e.g. check,
 ## Owner
 Keep Shipping is a venture of Factory Zero Pte. Ltd. (https://factory0.ventures/), run as a division of that company.
 
+## Built with
+
+From the Factory Zero registry (https://factory0.ventures/stack.json), shown
+in the site footer.
+
+- Hosting: Cloudflare (live: this site).
+- Framework: Cratefield (planned: the hosted parts, waitlist, approvals and run logs).
+- Bug reports: SupportGenius (planned).
+- Payments: Polar as Merchant of Record (planned; pricing is not set and nothing is on sale).
+
 ## Links
 - Site: https://keepshipping.run/
 - Early access: https://keepshipping.run/#early-access (or email contact@keepshipping.run)
