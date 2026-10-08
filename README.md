@@ -29,9 +29,16 @@ Keep Shipping is in development. So:
 - The hero says **Early access · in development**.
 - Workflow files, CLI output and timings on the page show the planned design.
   `llms.txt` says so in plain words.
-- There is no signup backend yet. A valid email opens a prefilled mail to
-  `contact@keepshipping.run` (Cloudflare Email Routing), and the status line
-  says that. With JS off, the form's own `mailto:` action does the same.
+- The early-access forms post `{ email, product: "keepshipping", captchaToken }`
+  to the waitlist Worker at `https://api.keepshipping.run/v1/waitlist`
+  (`Keep-Shipping/waitlist-backend`, Cratefield harness waitlist module, mail
+  through Owlpost from `no-reply@send.keepshipping.run`). A Cloudflare Turnstile
+  check (sitekey `0x4AAAAAAFRBJzz7QFTNISC4`, action `waitlist`) is rendered into
+  the form on submit; the Worker binds the token to the apex `keepshipping.run`,
+  so `www` must redirect to the apex. A join answers 202 and mails a
+  confirmation link. If the Worker or Turnstile is unreachable, the status line
+  offers `contact@keepshipping.run` instead. With JS off, the form's own
+  `mailto:` action sends the request by mail.
 - Links go to things that exist: "How it works" is section 02, GitHub is the
   organisation. There are no docs yet, so there is no docs link.
 
