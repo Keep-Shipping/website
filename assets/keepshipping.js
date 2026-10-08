@@ -37,11 +37,64 @@
     input.addEventListener('focus', load);
   });
 
+  // The line under the field: announced politely, or as an alert (with the
+  // field marked invalid) when `bad`.
   function status(form, text, bad) {
-    var p = form.querySelector('[role=status]');
+    var p = line(form);
+    var input = form.querySelector('input[type=email]');
+    p.setAttribute('role', bad ? 'alert' : 'status');
+    p.setAttribute('aria-live', bad ? 'assertive' : 'polite');
     p.textContent = text;
+    if (bad) input.setAttribute('aria-invalid', 'true'); else input.removeAttribute('aria-invalid');
     if (form.closest('#early-access')) return; // CTA status is white on blue
     p.style.color = bad ? 'oklch(0.5 0.19 25)' : 'oklch(0.48 0.2 263)';
+  }
+  function line(form) { return form.querySelector('p[id$="-status"]'); }
+
+  var NET = 'We couldn’t reach the waitlist just now. Try again in a moment, or write to ';
+  var BAD_EMAIL = 'That email address doesn’t look right. Check it and try again.';
+
+  // Success: the form gives way to a panel that says where the link went.
+  function done(form, email) {
+    var panel = document.createElement('div');
+    panel.className = 'ks-done';
+    panel.setAttribute('role', 'status');
+    panel.setAttribute('aria-live', 'polite');
+    panel.tabIndex = -1;
+    var h = document.createElement('p');
+    h.className = 'ks-done__h';
+    h.textContent = 'Check your inbox';
+    var body = document.createElement('p');
+    var who = document.createElement('strong');
+    who.textContent = email;
+    body.append('We sent a confirmation link to ', who, '. Click it to hold your place on the Keep Shipping waitlist.');
+    var fine = document.createElement('p');
+    fine.className = 'ks-done__fine';
+    fine.textContent = 'It can take a minute — check Spam or Promotions if it isn’t there. Already confirmed before? Then you’re already on the list; nothing more to do.';
+    var more = document.createElement('p');
+    more.className = 'ks-done__fine';
+    var again = document.createElement('button');
+    again.type = 'button';
+    again.className = 'ks-done__again';
+    again.textContent = 'Use a different email';
+    var mail = document.createElement('a');
+    mail.href = 'mailto:' + TO + '?subject=' + encodeURIComponent('Keep Shipping early access');
+    mail.textContent = TO;
+    more.append(again, ' · Still nothing? Email ', mail, '.');
+    panel.append(h, body, fine, more);
+    again.addEventListener('click', function () {
+      panel.remove();
+      form.hidden = false;
+      status(form, '');
+      token = '';
+      if (window.turnstile && widget !== null && widgetForm === form) window.turnstile.reset(widget);
+      var input = form.querySelector('input[type=email]');
+      input.focus();
+      input.select();
+    });
+    form.hidden = true;
+    form.parentNode.insertBefore(panel, form.nextSibling);
+    panel.focus();
   }
 
   // The Worker or Turnstile is unreachable: offer the address to write to.
@@ -52,8 +105,9 @@
     a.href = 'mailto:' + TO + '?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
     a.textContent = TO;
     a.style.color = 'inherit';
-    var p = form.querySelector('[role=status]');
-    p.textContent = 'Could not sign you up right now. Write to ';
+    var p = line(form);
+    status(form, NET, true);
+    form.querySelector('input[type=email]').removeAttribute('aria-invalid');
     p.appendChild(a);
     p.appendChild(document.createTextNode(' and we’ll add you.'));
   }
@@ -78,7 +132,7 @@
       b.setAttribute('data-captcha', '');
       b.setAttribute('role', 'group');
       b.setAttribute('aria-label', 'Human check');
-      form.insertBefore(b, form.querySelector('[role=status]'));
+      form.insertBefore(b, line(form));
     }
     return b;
   }
@@ -109,27 +163,33 @@
     var t = token;
     token = '';
     btn.disabled = true;
-    status(form, 'Sending…');
+    btn.setAttribute('aria-busy', 'true');
+    btn.dataset.label = btn.textContent;
+    btn.textContent = 'Sending…';
+    status(form, '');
     fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email: email, product: 'keepshipping', captchaToken: t })
     }).then(function (res) {
       if (res.ok) {
-        status(form, '✓ Check your inbox for a link to confirm ' + email + '. One more email when your invite is ready.');
+        status(form, '');
+        done(form, email);
         return;
       }
       return res.json().catch(function () { return {}; }).then(function (p) {
         var type = (p && p.type) || '';
-        if (/\/captcha-failed$/.test(type)) status(form, 'The human check didn’t pass. Try once more.', true);
-        else if (res.status === 429) status(form, 'Too many tries. Wait a minute and try again.', true);
-        else if (res.status === 400) status(form, 'That doesn’t look like an email address.', true);
+        if (/\/captcha-failed$/.test(type)) status(form, 'The human check didn’t go through. It’s been reset — complete it again, then send.', true);
+        else if (res.status === 429) status(form, 'Too many tries. Wait a minute, then try again.', true);
+        else if (res.status === 400) { status(form, BAD_EMAIL, true); input.focus(); }
         else fallback(form, email);
       });
     }).catch(function () {
       fallback(form, email);
     }).then(function () {
       btn.disabled = false;
+      btn.removeAttribute('aria-busy');
+      btn.textContent = btn.dataset.label || 'Get early access';
       if (window.turnstile && widget !== null) window.turnstile.reset(widget);
     });
   }
@@ -139,7 +199,8 @@
       e.preventDefault();
       var email = form.querySelector('input[type=email]').value.trim();
       if (!EMAIL.test(email)) {
-        status(form, 'That doesn’t look like an email address.', true);
+        status(form, BAD_EMAIL, true);
+        form.querySelector('input[type=email]').focus();
         return;
       }
       if (broken) { fallback(form, email); return; }
@@ -147,7 +208,7 @@
       pending = form;
       load();
       render(form);
-      status(form, 'One quick human check, then you’re on the list.');
+      status(form, 'One more step: complete the human check, then you’re on the list.');
     });
   });
 })();

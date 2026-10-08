@@ -27,6 +27,22 @@ html{scroll-padding-top:16px}
 .btn--cta:hover{background:#fff!important;color:oklch(0.2 0.02 262)!important}
 .btn--cta:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .ks-form[aria-busy="true"] .btn{opacity:.6;cursor:progress}
+.btn[aria-busy="true"]{opacity:.85;cursor:progress}
+.btn[aria-busy="true"]::before{content:"";display:inline-block;width:14px;height:14px;margin-right:10px;vertical-align:-2px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:ksspin .8s linear infinite}
+@keyframes ksspin{to{transform:rotate(360deg)}}
+.ks-form[hidden]{display:none!important}
+.ks-done{display:flex;flex-direction:column;gap:10px;padding:20px 22px;border:1.5px solid oklch(0.2 0.02 262);background:oklch(0.99 0.002 255);color:oklch(0.2 0.02 262);font-size:17px;line-height:1.5}
+#early-access .ks-done{border-color:#fff;background:oklch(0.2 0.02 262);color:#fff;max-width:620px}
+.ks-done:focus{outline:none}
+.ks-done:focus-visible{outline:3px solid oklch(0.48 0.2 263);outline-offset:2px}
+#early-access .ks-done:focus-visible{outline-color:#fff}
+.ks-done p{margin:0}
+.ks-done__h{font-family:'DM Mono',monospace;font-size:14px;letter-spacing:0.04em;text-transform:uppercase;color:oklch(0.48 0.2 263)}
+#early-access .ks-done__h{color:#fff}
+.ks-done strong{overflow-wrap:anywhere}
+.ks-done__fine{font-size:15px;opacity:.85}
+.ks-done__again{padding:0;font:inherit;color:inherit;background:none;border:0;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.ks-done a{color:inherit}
 
 .status-line{margin:0;display:flex;align-items:center;gap:10px;font-family:'DM Mono',monospace;font-size:13px;letter-spacing:0.04em;text-transform:uppercase;color:oklch(0.2 0.02 262)}
 .status-line span{width:8px;height:8px;background:oklch(0.48 0.2 263);display:block;animation:ksblink 1.2s steps(1) infinite}
@@ -61,7 +77,7 @@ html{scroll-padding-top:16px}
 
 @keyframes ksroute{0%{left:0%;opacity:0}6%{opacity:1}94%{opacity:1}100%{left:100%;opacity:0}}
 @keyframes ksblink{50%{opacity:0}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.route-dot{display:none}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.btn[aria-busy="true"]::before{display:none}.route-dot{display:none}}
 
 /* 404 */
 .lost{max-width:1240px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(20px,5vw,48px) clamp(72px,10vw,144px);display:flex;flex-direction:column;gap:28px}
