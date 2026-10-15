@@ -42,6 +42,7 @@ in the site footer.
 - Site: https://keepshipping.run/
 - Early access: https://keepshipping.run/#early-access (or email contact@keepshipping.run)
 - Privacy: https://keepshipping.run/privacy
+- Docs: https://docs.keepshipping.run/ (and https://docs.keepshipping.run/llms.txt)
 - GitHub: https://github.com/Keep-Shipping
 
 ## Planned: Cloudflare console
