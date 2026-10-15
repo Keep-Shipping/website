@@ -44,6 +44,7 @@ in the site footer.
 - Privacy: https://keepshipping.run/privacy
 - Docs: https://docs.keepshipping.run/ (and https://docs.keepshipping.run/llms.txt)
 - GitHub: https://github.com/Keep-Shipping
+- Source (MIT): https://github.com/Keep-Shipping/harness
 
 ## Planned: Cloudflare console
 A console for every Cloudflare resource (zones, DNS, Workers, Pages, D1, R2, custom domains, email
