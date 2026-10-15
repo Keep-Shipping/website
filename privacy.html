@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy — Keep Shipping</title>
+<meta name="description" content="What the Keep Shipping site and early-access list store about you, why, for how long, who processes it, and how to be removed.">
+<link rel="canonical" href="https://keepshipping.run/privacy">
+<meta name="theme-color" content="#eef0f3">
+<link rel="icon" href="/assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,700;12..96,800&family=DM+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/assets/keepshipping.css">
+</head>
+<body>
+<div class="page">
+  <header style="max-width:1240px;margin:0 auto;padding:20px clamp(20px,5vw,48px);display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+    <a href="/" aria-label="Keep Shipping home" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:oklch(0.2 0.02 262);font-weight:800;font-size:19px;letter-spacing:-0.02em">
+      <span aria-hidden="true" style="width:14px;height:14px;background:oklch(0.48 0.2 263);display:block"></span>
+      Keep Shipping
+    </a>
+    <nav aria-label="Primary" style="font-family:'DM Mono',monospace;font-size:14px"><a class="nav-cta" href="/#early-access">Early access</a></nav>
+  </header>
+  <main style="max-width:760px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(20px,5vw,48px) clamp(72px,10vw,144px)">
+    <p style="margin:0 0 12px;font-family:'DM Mono',monospace;font-size:14px;color:oklch(0.45 0.02 262)">Effective 15 October 2026 · Keep Shipping is in early access, not generally available</p>
+    <h1 style="margin:0 0 24px;font-weight:800;font-size:clamp(40px,7vw,72px);line-height:0.95;letter-spacing:-0.04em">Privacy</h1>
+    <p><strong>The short version:</strong> this site stores one thing about you, and only if you give it: your email address, when you join the early-access list. It is used to send you one invite when your place comes up, and nothing else. No cookies, no analytics, no advertising trackers, nothing sold or shared for marketing.</p>
+
+    <h2>1. Who is responsible</h2>
+    <p>Keep Shipping is a division of Factory Zero Pte. Ltd., Singapore (“we”), the controller of the personal data described here. Contact: <a href="mailto:contact@keepshipping.run?subject=Privacy">contact@keepshipping.run</a>.</p>
+
+    <h2>2. The early-access list</h2>
+    <p>If you join it we keep the email address you enter, whether you confirmed it, your place in line and the time you joined. Basis: your consent, given by confirming the address (GDPR Art. 6(1)(a)); you can withdraw it at any time.</p>
+    <p>We send a confirmation link when you join and a short note when you click it. After that the only email we send is your invite. No reminders, no newsletter. An address that is never confirmed gets no further mail.</p>
+    <p>Kept until you ask to be removed (write to <a href="mailto:contact@keepshipping.run?subject=Remove%20me">contact@keepshipping.run</a> or reply to any of those emails), and the whole list is deleted once early access is over and everyone on it has been invited. Sign-ups are rate-limited per IP address; those counters are short-lived and not stored with your entry.</p>
+
+    <h2>3. This website</h2>
+    <p>No cookies, no analytics and no advertising trackers. The site is served by Cloudflare, which processes visitor IP addresses to deliver and protect it. Typefaces load from Google Fonts, so your browser’s request, including your IP address, reaches Google.</p>
+    <p>The early-access form runs Cloudflare Turnstile, which tells people from bots, usually without a puzzle. It processes your IP address and signals from your browser on Cloudflare’s servers when you use the form. With JavaScript off, the form opens an email to us instead, and that email is handled like any other message we receive.</p>
+
+    <h2>4. Processors</h2>
+    <ul>
+      <li><strong>Cloudflare</strong>: hosting, Turnstile, and the list itself (Cloudflare Workers and a D1 database).</li>
+      <li><strong>Owlpost</strong> (owlpost.to), the mail service Factory Zero runs: sends the confirmation, the note and the invite, and keeps a record of each message (recipient, time, delivery status) to handle bounces and complaints.</li>
+      <li><strong>Google Fonts</strong>: receives your browser’s request for the typefaces.</li>
+    </ul>
+    <p>Where data leaves the EU or UK, these rely on Standard Contractual Clauses or an adequacy decision.</p>
+
+    <h2>5. The product</h2>
+    <p>The <code>keepshipping</code> CLI runs on your machine and in your CI. It sends nothing to us unless you turn on a hosted feature. The hosted parts (web approvals, run logs) and what they store are described in the product documentation before you use them.</p>
+
+    <h2>6. Your rights</h2>
+    <p>Under the GDPR and UK GDPR you can ask us to access, correct, delete or export your personal data, to restrict or object to its processing, and you can withdraw consent at any time. Write to <a href="mailto:contact@keepshipping.run?subject=Privacy">contact@keepshipping.run</a>; we answer within one month. You can also complain to the data protection authority where you live or work.</p>
+
+    <h2>7. Changes</h2>
+    <p>We will post changes here with a new effective date.</p>
+  </main>
+  <footer style="background:oklch(0.2 0.02 262);color:oklch(0.85 0.006 262)">
+    <div style="max-width:1240px;margin:0 auto;padding:28px clamp(20px,5vw,48px);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px;font-family:'DM Mono',monospace;font-size:14px">
+      <span class="foot-copy">© 2026 <a href="https://factory0.ventures/">Factory Zero Pte. Ltd.</a> · Keep Shipping is a Factory Zero venture</span>
+      <nav aria-label="Footer" style="display:flex;gap:24px;flex-wrap:wrap">
+        <a class="foot-link" href="/">Home</a>
+        <a class="foot-link" href="/#early-access">Early access</a>
+        <a class="foot-link" href="/llms.txt">llms.txt</a>
+      </nav>
+    </div>
+  </footer>
+</div>
+</body>
+</html>

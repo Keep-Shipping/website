@@ -13,7 +13,7 @@ cd "$(dirname "$0")/.."
 rm -rf dist
 mkdir -p dist
 
-for f in index.html 404.html robots.txt sitemap.xml llms.txt site.webmanifest _headers _redirects; do
+for f in index.html 404.html privacy.html robots.txt sitemap.xml llms.txt site.webmanifest _headers _redirects; do
   cp "$f" dist/
 done
 cp -R assets dist/assets

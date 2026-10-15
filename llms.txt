@@ -5,7 +5,7 @@
 Tagline: Deploys you can read.
 
 ## Status
-In development, not generally available. The website and the early-access list are live; the list is an email to contact@keepshipping.run for now. The CLI (keepshipping check, keepshipping run), the step library, the runner and the Jev decide step are being built. The workflow examples, CLI output and timings on the site show the planned design, not measurements.
+In development, not generally available. The website and the early-access list are live: the form joins a waitlist (one confirmation email, then one invite). The CLI (keepshipping check, keepshipping run), the step library, the runner and the Jev decide step are being built. The workflow examples, CLI output and timings on the site show the planned design, not measurements.
 
 ## The problem
 Hundreds of lines of CI YAML nobody fully understands, Terraform and Docker glued together with shell scripts, every repo drifting a little, and no way to test a pipeline except to push it and wait.
@@ -41,6 +41,7 @@ in the site footer.
 ## Links
 - Site: https://keepshipping.run/
 - Early access: https://keepshipping.run/#early-access (or email contact@keepshipping.run)
+- Privacy: https://keepshipping.run/privacy
 - GitHub: https://github.com/Keep-Shipping
 
 ## Planned: Cloudflare console
