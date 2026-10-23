@@ -11,8 +11,8 @@
       "url": "https://cratefield.com/",
       "role": "framework",
       "phrase": "Built with",
-      "status": "planned",
-      "note": "The hosted parts (waitlist, approvals, run logs) are planned as a Cratefield venture."
+      "status": "live",
+      "note": "The waitlist Worker at api.keepshipping.run runs on the Cratefield harness waitlist module; approvals and run logs are planned as Cratefield modules."
     },
     {
       "id": "FZ-008",
@@ -33,6 +33,16 @@
       "phrase": "Payments by",
       "status": "planned",
       "note": "Paid plans through Polar as Merchant of Record, via the Cratefield Payments port. Nothing is on sale yet."
+    },
+    {
+      "id": "google-fonts",
+      "name": "Google Fonts",
+      "kind": "third-party",
+      "url": "https://fonts.google.com",
+      "role": "fonts",
+      "phrase": "Typefaces from",
+      "status": "live",
+      "note": "The site’s typefaces (Bricolage Grotesque, DM Mono), loaded from Google."
     },
     {
       "id": "cloudflare",
