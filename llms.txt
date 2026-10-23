@@ -33,8 +33,9 @@ Keep Shipping is a venture of Factory Zero Pte. Ltd. (https://factory0.ventures/
 From the Factory Zero registry (https://factory0.ventures/stack.json), shown
 in the site footer.
 
+- Framework: Cratefield (live: the waitlist Worker at api.keepshipping.run runs on the Cratefield harness waitlist module; approvals and run logs are planned).
+- Typefaces: Google Fonts (live: Bricolage Grotesque and DM Mono).
 - Hosting: Cloudflare (live: this site).
-- Framework: Cratefield (planned: the hosted parts, waitlist, approvals and run logs).
 - Bug reports: SupportGenius (planned).
 - Payments: Polar as Merchant of Record (planned; pricing is not set and nothing is on sale).
 
