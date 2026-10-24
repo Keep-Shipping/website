@@ -54,7 +54,7 @@ if [ "$dry_run" = 1 ]; then
   exit 0
 fi
 
-npx --yes wrangler@latest pages deploy "$tmp/tree/dist" \
+bunx wrangler@latest pages deploy "$tmp/tree/dist" \
   --project-name=keepshipping \
   --branch=main \
   --commit-hash="$sha" \
